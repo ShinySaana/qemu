@@ -568,8 +568,8 @@ static void armv7m_reset(void *opaque)
     cpu_reset(CPU(cpu));
 }
 
-void armv7m_load_kernel(ARMCPU *cpu, const char *kernel_filename, int mem_size)
-{
+void armv7m_load_kernel(ARMCPU *cpu, const char *kernel_filename,
+                        hwaddr mem_base, int mem_size){
     ssize_t image_size;
     uint64_t entry;
     int big_endian;
@@ -595,8 +595,8 @@ void armv7m_load_kernel(ARMCPU *cpu, const char *kernel_filename, int mem_size)
                                  &entry, NULL, NULL,
                                  NULL, big_endian, EM_ARM, 1, 0, as);
         if (image_size < 0) {
-            image_size = load_image_targphys_as(kernel_filename, 0,
-                                                mem_size, as);
+            image_size = load_image_targphys_as(kernel_filename, mem_base,
+                                                 mem_size, as);
         }
         if (image_size < 0) {
             error_report("Could not load kernel '%s'", kernel_filename);
